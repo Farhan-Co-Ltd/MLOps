@@ -1,7 +1,7 @@
-# Submission 1: Proyek Pengembangan Machine Learning Pipeline
-Nama:Farhan Al Farizy
+# Submission 1 : Proyek Pengembangan Machine Learning Pipeline
+Nama : Farhan Al Farizy
 
-Username dicoding:Belguga
+Username dicoding : Belguga
 
 | | Deskripsi |
 | ----------- | ----------- |
