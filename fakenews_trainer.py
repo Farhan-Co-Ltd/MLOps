@@ -44,7 +44,6 @@ vectorize_layer = layers.TextVectorization(
   
 embedding_dim=16
 def model_builder():
-    """Build machine learning model"""
     inputs = tf.keras.Input(shape=(1,), name=transformed_name(FEATURE_KEY), dtype=tf.string)
     reshaped_narrative = tf.reshape(inputs, [-1])
     x = vectorize_layer(reshaped_narrative)
@@ -54,31 +53,26 @@ def model_builder():
     x = layers.Dense(32, activation="relu")(x)
     outputs = layers.Dense(1, activation='sigmoid')(x)
     
-    model = tf.keras.Model(inputs=inputs, outputs = outputs)
-    
+    model = tf.keras.Model(inputs=inputs, outputs = outputs)  
     model.compile(
         loss = 'binary_crossentropy',
         optimizer=tf.keras.optimizers.Adam(0.01),
         metrics=[tf.keras.metrics.BinaryAccuracy()]
-    )    
-      
+    )     
     model.summary()
+
     return model 
 
 
 
 def _get_serve_tf_examples_fn(model, tf_transform_output):
-
     model.tft_layer = tf_transform_output.transform_features_layer()
     
     @tf.function
     def serve_tf_examples_fn(serialized_tf_examples):
-
         feature_spec = tf_transform_output.raw_feature_spec()
         feature_spec.pop(LABEL_KEY)
-
         parsed_features = tf.io.parse_example(serialized_tf_examples, feature_spec)
-
         transformed_features = model.tft_layer(parsed_features)
 
         return model(transformed_features)
@@ -88,7 +82,6 @@ def _get_serve_tf_examples_fn(model, tf_transform_output):
 
 def run_fn(fn_args: FnArgs) -> None:
     log_dir = os.path.join(os.path.dirname(fn_args.serving_model_dir), 'logs')
-
     tensorboard_callback = tf.keras.callbacks.TensorBoard(
         log_dir = log_dir, update_freq='batch'
     )
